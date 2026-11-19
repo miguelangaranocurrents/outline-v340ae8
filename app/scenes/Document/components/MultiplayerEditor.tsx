@@ -362,23 +362,31 @@ function MultiplayerEditor(
           ref={ref}
         />
       )}
-      <Editor
-        {...props}
-        readOnly={props.readOnly || editorVersionBehind}
-        value={undefined}
-        defaultValue={undefined}
-        extensions={extensions}
-        ref={showCache ? undefined : ref}
-        style={
-          showCache
-            ? {
-                height: 0,
-                opacity: 0,
-              }
-            : undefined
-        }
-        className={showCursorNames ? "show-cursor-names" : undefined}
-      />
+      {/* While the cached version is shown, the live editor is only mounted so
+          it can sync. It is hidden from assistive technology so there is a
+          single editor exposed to the accessibility tree. */}
+      <div
+        aria-hidden={showCache || undefined}
+        style={{ display: "contents" }}
+      >
+        <Editor
+          {...props}
+          readOnly={props.readOnly || editorVersionBehind}
+          value={undefined}
+          defaultValue={undefined}
+          extensions={extensions}
+          ref={showCache ? undefined : ref}
+          style={
+            showCache
+              ? {
+                  height: 0,
+                  opacity: 0,
+                }
+              : undefined
+          }
+          className={showCursorNames ? "show-cursor-names" : undefined}
+        />
+      </div>
     </>
   );
 }
